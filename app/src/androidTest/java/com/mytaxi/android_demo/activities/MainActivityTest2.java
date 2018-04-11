@@ -21,13 +21,11 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -36,13 +34,22 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class Espressodemotest {
+public class MainActivityTest2 {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void espressodemotest() {
+    public void mainActivityTest2() {
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.edt_username),
                         childAtPosition(
@@ -61,7 +68,7 @@ public class Espressodemotest {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText2.perform(replaceText("whiteelephant261"), closeSoftKeyboard());
+        appCompatEditText2.perform(replaceText("whiteelephant261"));
 
         ViewInteraction appCompatEditText3 = onView(
                 allOf(withId(R.id.edt_password),
@@ -71,7 +78,7 @@ public class Espressodemotest {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText3.perform(replaceText("video"), closeSoftKeyboard());
+        appCompatEditText3.perform(replaceText("video"));
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btn_login), withText("Login"),
@@ -83,16 +90,6 @@ public class Espressodemotest {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction frameLayout = onView(
-                allOf(withId(R.id.map),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.drawer_layout),
-                                        0),
-                                2),
-                        isDisplayed()));
-        frameLayout.perform(click());
-
         ViewInteraction appCompatAutoCompleteTextView = onView(
                 allOf(withId(R.id.textSearch),
                         childAtPosition(
@@ -102,7 +99,7 @@ public class Espressodemotest {
                                                 1)),
                                 0),
                         isDisplayed()));
-        appCompatAutoCompleteTextView.perform(replaceText("sa"), closeSoftKeyboard());
+        appCompatAutoCompleteTextView.perform(replaceText("sa"));
 
         DataInteraction appCompatTextView = onData(anything())
                 .inAdapterView(childAtPosition(
@@ -121,32 +118,9 @@ public class Espressodemotest {
                         isDisplayed()));
         floatingActionButton.perform(click());
 
-        pressBack();
-
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withContentDescription("Open navigation drawer"),
-                        childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withClassName(is("android.support.design.widget.AppBarLayout")),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
-
-        ViewInteraction navigationMenuItemView = onView(
-                allOf(childAtPosition(
-                        allOf(withId(R.id.design_navigation_view),
-                                childAtPosition(
-                                        withId(R.id.nav_view),
-                                        0)),
-                        1),
-                        isDisplayed()));
-        navigationMenuItemView.perform(click());
-
     }
 
-    private static Matcher<View> childAtPosition(
+    public static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
         return new TypeSafeMatcher<View>() {
